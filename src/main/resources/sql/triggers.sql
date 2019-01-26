@@ -31,6 +31,9 @@ CREATE TRIGGER nauczyciele_insert
     IF NEW.nr_kontaktowy < 100000000 OR NEW.nr_kontaktowy > 999999999 THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Nieprawidlowy numer telefonu';
     END IF;
+    IF NEW.nazwisko IN (SELECT nazwisko FROM nauczyciele WHERE imie LIKE NEW.imie) THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Taki nauczyciel już tu pracuje';
+    END IF;
   END;
 
 DROP TRIGGER IF EXISTS nauczyciele_update;
@@ -74,15 +77,16 @@ CREATE TRIGGER nauczyciele_before_delete
     IF OLD.pesel IN (SELECT wychowawca FROM klasy) THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ten nauczyciel jest wychowawcą którejś klasy. Zmień najpierw wychowawcę.';
     END IF;
+#     DELETE FROM oceny WHERE id_kursu = (SELECT id_kursu FROM kursy WHERE id_nauczyciela = OLD.pesel);
+    DELETE FROM kursy WHERE id_nauczyciela = OLD.pesel;
   END;
 
-DROP TRIGGER IF EXISTS nauczyciele_after_delete;
-CREATE TRIGGER nauczyciele_after_delete
-  AFTER DELETE ON nauczyciele
-  FOR EACH ROW
-  BEGIN
-    DELETE FROM kursy WHERE id_nauczyciela LIKE OLD.pesel;
-  END;
+# DROP TRIGGER IF EXISTS nauczyciele_after_delete;
+# CREATE TRIGGER nauczyciele_after_delete
+#   AFTER DELETE ON nauczyciele
+#   FOR EACH ROW
+#   BEGIN
+#   END;
 
 
 # przedmioty
@@ -128,6 +132,9 @@ CREATE TRIGGER dzwonki_insert
     IF NEW.nr_lekcji > 10 THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zbyt duży numer lekcji';
     END IF;
+    IF NEW.nr_lekcji < 0 THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zbyt mały numer lekcji';
+    END IF;
     IF (SELECT count(nr_lekcji) FROM dzwonki) > 10 THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zbyt wiele lekcji';
     END IF;
@@ -158,6 +165,32 @@ CREATE TRIGGER dzwonki_update
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zbyt krotka przerwa';
     END IF;
 
+  END;
+
+# kursy
+
+DROP TRIGGER IF EXISTS kursy_insert;
+CREATE TRIGGER kursy_insert
+  BEFORE INSERT ON kursy
+  FOR EACH ROW
+  BEGIN
+    IF (SELECT id_kursu FROM kursy WHERE id_nauczyciela = NEW.id_nauczyciela AND id_przedmiotu = NEW.id_przedmiotu) IS NOT NULL THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Taki kurs już istnieje';
+    END IF;
+    IF (SELECT count(id_przedmiotu) FROM kursy WHERE id_nauczyciela = NEW.id_nauczyciela) > 2 THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zbyt wiele kursów tego nauczyciela';
+    END IF;
+    IF (SELECT count(id_nauczyciela) FROM kursy WHERE id_przedmiotu = NEW.id_przedmiotu) > 3 THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zbyt wiele kursów tego przedmiotu';
+    END IF;
+  END;
+
+DROP TRIGGER IF EXISTS kursy_delete;
+CREATE TRIGGER kursy_delete
+  BEFORE DELETE ON kursy
+  FOR EACH ROW
+  BEGIN
+    DELETE FROM oceny WHERE id_kursu = OLD.id_kursu;
   END;
 
 #uczniowie
@@ -297,7 +330,7 @@ CREATE TRIGGER klasy_delete
 #     START TRANSACTION ;
 
     DELETE FROM zajecia WHERE id_klasy = OLD.id_klasy;
-    DELETE FROM klasa_uczniowie WHERE klasy.id_klasy = OLD.id_klasy;
+    DELETE FROM klasa_uczniowie WHERE id_klasy = OLD.id_klasy;
 #     COMMIT ;
   END;
 
