@@ -217,7 +217,7 @@ CREATE TRIGGER uczniowie_insert
 		    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Nieprawidlowy numer PESEL';
 	  END IF;
 # 	  weryfikacja daty urodzenia z peselem
-    IF (cast(substring(@newpsl,1,2) AS int) <> year(NEW.data_urodzenia)-1900
+    IF (cast(substring(@newpsl,1,2) AS int) <> year(NEW.data_urodzenia)-2000
       OR cast(substring(@newpsl,3,2) AS int) <> month(NEW.data_urodzenia)
       OR cast(substring(@newpsl,5,2) AS int) <> day(NEW.data_urodzenia)) THEN
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Nieprawidlowa data urodzenia lub PESEL';
@@ -255,7 +255,7 @@ CREATE TRIGGER uczniowie_update
 		    SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Nieprawidlowy numer PESEL';
 	  END IF;
 # 	  weryfikacja daty urodzenia z peselem
-    IF (cast(substring(@newpsl,1,2) AS int) <> year(NEW.data_urodzenia)-1900
+    IF (cast(substring(@newpsl,1,2) AS int) <> year(NEW.data_urodzenia)-2000
       OR cast(substring(@newpsl,3,2) AS int) <> month(NEW.data_urodzenia)
       OR cast(substring(@newpsl,5,2) AS int) <> day(NEW.data_urodzenia)) THEN
         SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Nieprawidlowa data urodzenia lub PESEL';
@@ -272,7 +272,7 @@ CREATE TRIGGER uczniowie_update
 
 DROP TRIGGER IF EXISTS uczniowie_delete;
 CREATE TRIGGER uczniowie_delete
-  AFTER DELETE ON uczniowie
+  BEFORE DELETE ON uczniowie
   FOR EACH ROW
   BEGIN
     SET @id_klasy = (SELECT id_klasy FROM klasa_uczniowie WHERE id_ucznia = OLD.pesel);
@@ -301,6 +301,9 @@ CREATE TRIGGER klasy_insert
     IF NEW.sala IN (SELECT sala FROM klasy) THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ta sala jest już przypisana do innej klasy';
     END IF;
+    IF NEW.liczebnosc > (SELECT pojemnosc FROM sale WHERE nr_sali = NEW.sala) THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Sala zbyt mala dla takiej liczby osob';
+    END IF;
   END;
 
 
@@ -312,11 +315,14 @@ CREATE TRIGGER klasy_update
     IF NEW.liczebnosc > 36 OR NEW.liczebnosc < 0 THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Nieprawidłowa liczba osób w klasie';
     END IF;
-    IF NEW.wychowawca IN (SELECT wychowawca FROM klasy) THEN
+    IF NEW.wychowawca IN (SELECT wychowawca FROM klasy WHERE id_klasy <> OLD.id_klasy) THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ten nauczyciel jest już wychowawcą';
     END IF;
-    IF NEW.sala IN (SELECT sala FROM klasy) THEN
+    IF NEW.sala IN (SELECT sala FROM klasy WHERE id_klasy <> OLD.id_klasy) THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ta sala jest już przypisana do innej klasy';
+    END IF;
+    IF NEW.liczebnosc > (SELECT pojemnosc FROM sale WHERE nr_sali = NEW.sala) THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Sala zbyt mala dla takiej liczby osob';
     END IF;
   END;
 
@@ -366,13 +372,13 @@ CREATE TRIGGER ku_update
 
 DROP TRIGGER IF EXISTS ku_delete;
 CREATE TRIGGER ku_delete
-  AFTER DELETE on klasa_uczniowie
+  BEFORE DELETE on klasa_uczniowie
   FOR EACH ROW
   BEGIN
     UPDATE klasy SET liczebnosc = liczebnosc - 1 WHERE id_klasy = OLD.id_klasy;
-    IF (SELECT * FROM klasa_uczniowie WHERE id_klasy = OLD.id_klasy) IS NULL THEN
-      DELETE FROM klasy WHERE klasy.id_klasy = OLD.id_klasy;
-    END IF;
+#     IF (SELECT id_ucznia FROM klasa_uczniowie WHERE id_klasy = OLD.id_klasy) IS NULL THEN
+#       DELETE FROM klasy WHERE klasy.id_klasy = OLD.id_klasy;
+#     END IF;
   END;
 
 
