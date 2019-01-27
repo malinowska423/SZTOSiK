@@ -329,7 +329,7 @@ CREATE TRIGGER klasy_update
 
 DROP TRIGGER IF EXISTS klasy_delete;
 CREATE TRIGGER klasy_delete
-  AFTER DELETE ON klasy
+  BEFORE DELETE ON klasy
   FOR EACH ROW
   BEGIN
 #     SET AUTOCOMMIT = 0;
@@ -375,7 +375,9 @@ CREATE TRIGGER ku_delete
   BEFORE DELETE on klasa_uczniowie
   FOR EACH ROW
   BEGIN
-    UPDATE klasy SET liczebnosc = liczebnosc - 1 WHERE id_klasy = OLD.id_klasy;
+    IF (SELECT liczebnosc FROM klasy WHERE klasy.id_klasy = OLD.id_klasy) > 1 THEN
+      UPDATE klasy SET liczebnosc = liczebnosc - 1 WHERE id_klasy = OLD.id_klasy;
+    END IF ;
 #     IF (SELECT id_ucznia FROM klasa_uczniowie WHERE id_klasy = OLD.id_klasy) IS NULL THEN
 #       DELETE FROM klasy WHERE klasy.id_klasy = OLD.id_klasy;
 #     END IF;

@@ -973,605 +973,633 @@
       <SourceTextLength>745</SourceTextLength>
       <RoutineKind>procedure</RoutineKind>
     </routine>
-    <routine id="251" parent="2" name="generuj_plan">
+    <routine id="251" parent="2" name="generuj_oceny">
+      <SourceTextLength>2907</SourceTextLength>
+      <RoutineKind>procedure</RoutineKind>
+    </routine>
+    <routine id="252" parent="2" name="generuj_oceny_na_semestr">
+      <SourceTextLength>2866</SourceTextLength>
+      <RoutineKind>procedure</RoutineKind>
+    </routine>
+    <routine id="253" parent="2" name="generuj_plan">
       <SourceTextLength>1769</SourceTextLength>
       <RoutineKind>procedure</RoutineKind>
     </routine>
-    <routine id="252" parent="2" name="generuj_uczniow">
+    <routine id="254" parent="2" name="generuj_uczniow">
       <SourceTextLength>3971</SourceTextLength>
       <RoutineKind>procedure</RoutineKind>
     </routine>
-    <routine id="253" parent="2" name="losowa_data_urodzin">
+    <routine id="255" parent="2" name="losowa_data_miedzy">
+      <SourceTextLength>228</SourceTextLength>
+      <RoutineKind>function</RoutineKind>
+    </routine>
+    <routine id="256" parent="2" name="losowa_data_urodzin">
       <SourceTextLength>125</SourceTextLength>
       <RoutineKind>function</RoutineKind>
     </routine>
-    <routine id="254" parent="2" name="tiara_przydzialu">
+    <routine id="257" parent="2" name="tiara_przydzialu">
       <SourceTextLength>801</SourceTextLength>
       <RoutineKind>procedure</RoutineKind>
     </routine>
-    <column id="255" parent="238" name="nr_lekcji">
+    <column id="258" parent="238" name="nr_lekcji">
       <Position>1</Position>
       <DataType>tinyint(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="256" parent="238" name="poczatek">
+    <column id="259" parent="238" name="poczatek">
       <Position>2</Position>
       <DataType>time|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="257" parent="238" name="koniec">
+    <column id="260" parent="238" name="koniec">
       <Position>3</Position>
       <DataType>time|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="258" parent="238" name="PRIMARY">
+    <key id="261" parent="238" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>nr_lekcji</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="259" parent="238" name="dzwonki_insert">
+    <trigger id="262" parent="238" name="dzwonki_insert">
       <SourceTextLength>833</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="260" parent="238" name="dzwonki_update">
+    <trigger id="263" parent="238" name="dzwonki_update">
       <SourceTextLength>699</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
-    <column id="261" parent="239" name="id_klasy">
+    <column id="264" parent="239" name="id_klasy">
       <Position>1</Position>
       <DataType>char(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="262" parent="239" name="id_ucznia">
+    <column id="265" parent="239" name="id_ucznia">
       <Position>2</Position>
       <DataType>char(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="263" parent="239" name="id_ucznia">
+    <index id="266" parent="239" name="id_ucznia">
       <ColNames>id_ucznia</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="264" parent="239" name="PRIMARY">
+    <key id="267" parent="239" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id_klasy
 id_ucznia</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="265" parent="239" name="klasa_uczniowie_ibfk_1">
+    <foreign-key id="268" parent="239" name="klasa_uczniowie_ibfk_1">
       <ColNames>id_klasy</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>klasy</RefTableName>
       <RefColNames>id_klasy</RefColNames>
     </foreign-key>
-    <foreign-key id="266" parent="239" name="klasa_uczniowie_ibfk_2">
+    <foreign-key id="269" parent="239" name="klasa_uczniowie_ibfk_2">
       <ColNames>id_ucznia</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>uczniowie</RefTableName>
       <RefColNames>pesel</RefColNames>
     </foreign-key>
-    <trigger id="267" parent="239" name="ku_before_insert">
+    <trigger id="270" parent="239" name="ku_before_insert">
       <SourceTextLength>199</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="268" parent="239" name="ku_after_insert">
+    <trigger id="271" parent="239" name="ku_after_insert">
       <SourceTextLength>74</SourceTextLength>
       <Turn>after-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="269" parent="239" name="ku_update">
+    <trigger id="272" parent="239" name="ku_update">
       <SourceTextLength>171</SourceTextLength>
       <Turn>after-row</Turn>
       <Events>U</Events>
     </trigger>
-    <trigger id="270" parent="239" name="ku_delete">
-      <SourceTextLength>260</SourceTextLength>
+    <trigger id="273" parent="239" name="ku_delete">
+      <SourceTextLength>359</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
-    <column id="271" parent="240" name="id_klasy">
+    <column id="274" parent="240" name="id_klasy">
       <Position>1</Position>
       <DataType>char(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="272" parent="240" name="liczebnosc">
+    <column id="275" parent="240" name="liczebnosc">
       <Position>2</Position>
       <DataType>tinyint(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="273" parent="240" name="wychowawca">
+    <column id="276" parent="240" name="wychowawca">
       <Position>3</Position>
       <DataType>char(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="274" parent="240" name="sala">
+    <column id="277" parent="240" name="sala">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="275" parent="240" name="wychowawca">
+    <index id="278" parent="240" name="wychowawca">
       <ColNames>wychowawca</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="276" parent="240" name="klasy_sale_lekcyjne_nr_sali_fk">
+    <index id="279" parent="240" name="klasy_sale_lekcyjne_nr_sali_fk">
       <ColNames>sala</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="277" parent="240" name="PRIMARY">
+    <key id="280" parent="240" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id_klasy</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="278" parent="240" name="klasy_ibfk_1">
+    <foreign-key id="281" parent="240" name="klasy_ibfk_1">
       <ColNames>wychowawca</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>nauczyciele</RefTableName>
       <RefColNames>pesel</RefColNames>
     </foreign-key>
-    <foreign-key id="279" parent="240" name="klasy_sale_lekcyjne_nr_sali_fk">
+    <foreign-key id="282" parent="240" name="klasy_sale_lekcyjne_nr_sali_fk">
       <ColNames>sala</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>sale</RefTableName>
       <RefColNames>nr_sali</RefColNames>
     </foreign-key>
-    <trigger id="280" parent="240" name="klasy_insert">
+    <trigger id="283" parent="240" name="klasy_insert">
       <SourceTextLength>734</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="281" parent="240" name="klasy_update">
+    <trigger id="284" parent="240" name="klasy_update">
       <SourceTextLength>795</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
-    <trigger id="282" parent="240" name="klasy_delete">
+    <trigger id="285" parent="240" name="klasy_delete">
       <SourceTextLength>197</SourceTextLength>
-      <Turn>after-row</Turn>
+      <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
-    <column id="283" parent="241" name="id_kursu">
+    <column id="286" parent="241" name="id_kursu">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="284" parent="241" name="id_nauczyciela">
+    <column id="287" parent="241" name="id_nauczyciela">
       <Position>2</Position>
       <DataType>char(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="285" parent="241" name="id_przedmiotu">
+    <column id="288" parent="241" name="id_przedmiotu">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="286" parent="241" name="id_nauczyciela">
+    <index id="289" parent="241" name="id_nauczyciela">
       <ColNames>id_nauczyciela</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="287" parent="241" name="id_przedmiotu">
+    <index id="290" parent="241" name="id_przedmiotu">
       <ColNames>id_przedmiotu</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="288" parent="241" name="PRIMARY">
+    <key id="291" parent="241" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id_kursu</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="289" parent="241" name="kursy_ibfk_1">
+    <foreign-key id="292" parent="241" name="kursy_ibfk_1">
       <ColNames>id_nauczyciela</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>nauczyciele</RefTableName>
       <RefColNames>pesel</RefColNames>
     </foreign-key>
-    <foreign-key id="290" parent="241" name="kursy_ibfk_2">
+    <foreign-key id="293" parent="241" name="kursy_ibfk_2">
       <ColNames>id_przedmiotu</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>przedmioty</RefTableName>
       <RefColNames>id_przedmiotu</RefColNames>
     </foreign-key>
-    <trigger id="291" parent="241" name="kursy_insert">
+    <trigger id="294" parent="241" name="kursy_insert">
       <SourceTextLength>676</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="292" parent="241" name="kursy_delete">
+    <trigger id="295" parent="241" name="kursy_delete">
       <SourceTextLength>65</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
-    <column id="293" parent="242" name="pesel">
+    <column id="296" parent="242" name="pesel">
       <Position>1</Position>
       <DataType>char(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="294" parent="242" name="imie">
+    <column id="297" parent="242" name="imie">
       <Position>2</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="295" parent="242" name="nazwisko">
+    <column id="298" parent="242" name="nazwisko">
       <Position>3</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="296" parent="242" name="data_urodzenia">
+    <column id="299" parent="242" name="data_urodzenia">
       <Position>4</Position>
       <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="297" parent="242" name="adres">
+    <column id="300" parent="242" name="adres">
       <Position>5</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="298" parent="242" name="nr_kontaktowy">
+    <column id="301" parent="242" name="nr_kontaktowy">
       <Position>6</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="299" parent="242" name="PRIMARY">
+    <key id="302" parent="242" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>pesel</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="300" parent="242" name="nauczyciele_insert">
+    <trigger id="303" parent="242" name="nauczyciele_insert">
       <SourceTextLength>1540</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="301" parent="242" name="nauczyciele_update">
+    <trigger id="304" parent="242" name="nauczyciele_update">
       <SourceTextLength>1367</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
-    <trigger id="302" parent="242" name="nauczyciele_before_delete">
+    <trigger id="305" parent="242" name="nauczyciele_before_delete">
       <SourceTextLength>381</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
-    <column id="303" parent="243" name="id_oceny">
+    <column id="306" parent="243" name="id_oceny">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="304" parent="243" name="id_ucznia">
+    <column id="307" parent="243" name="id_ucznia">
       <Position>2</Position>
       <DataType>char(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="305" parent="243" name="id_kursu">
+    <column id="308" parent="243" name="id_kursu">
       <Position>3</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="306" parent="243" name="data">
+    <column id="309" parent="243" name="data">
       <Position>4</Position>
       <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="307" parent="243" name="semestr">
+    <column id="310" parent="243" name="semestr">
       <Position>5</Position>
       <DataType>char(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="308" parent="243" name="typ">
+    <column id="311" parent="243" name="typ">
       <Position>6</Position>
       <DataType>enum(&apos;cząstkowa&apos;, &apos;prop_sem&apos;, &apos;sem&apos;, &apos;prop_rocz&apos;, &apos;rocz&apos;)|0e</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;cząstkowa&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="309" parent="243" name="wartosc">
+    <column id="312" parent="243" name="wartosc">
       <Position>7</Position>
       <DataType>enum(&apos;+&apos;, &apos;-&apos;, &apos;1&apos;, &apos;2-&apos;, &apos;2&apos;, &apos;2+&apos;, &apos;3-&apos;, &apos;3&apos;, &apos;3+&apos;, &apos;4-&apos;, &apos;4&apos;, &apos;4+&apos;, &apos;5-&apos;, &apos;5&apos;, &apos;5+&apos;, &apos;6&apos;)|0e</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="310" parent="243" name="waga">
+    <column id="313" parent="243" name="waga">
       <Position>8</Position>
       <DataType>tinyint(4)|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>1</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="311" parent="243" name="opis">
+    <column id="314" parent="243" name="opis">
       <Position>9</Position>
       <DataType>varchar(30)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="312" parent="243" name="oceny_id_ucznia_id_przedmiotu_index">
+    <index id="315" parent="243" name="oceny_id_ucznia_id_przedmiotu_index">
       <ColNames>id_ucznia
 id_kursu</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="313" parent="243" name="id_kursu">
+    <index id="316" parent="243" name="id_kursu">
       <ColNames>id_kursu</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="314" parent="243" name="PRIMARY">
+    <key id="317" parent="243" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id_oceny</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="315" parent="243" name="oceny_ibfk_1">
+    <foreign-key id="318" parent="243" name="oceny_ibfk_1">
       <ColNames>id_ucznia</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>uczniowie</RefTableName>
       <RefColNames>pesel</RefColNames>
     </foreign-key>
-    <foreign-key id="316" parent="243" name="oceny_ibfk_2">
+    <foreign-key id="319" parent="243" name="oceny_ibfk_2">
       <ColNames>id_kursu</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>kursy</RefTableName>
       <RefColNames>id_kursu</RefColNames>
     </foreign-key>
-    <trigger id="317" parent="243" name="oceny_insert">
+    <trigger id="320" parent="243" name="oceny_insert">
       <SourceTextLength>311</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="318" parent="243" name="oceny_update">
+    <trigger id="321" parent="243" name="oceny_update">
       <SourceTextLength>311</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
-    <column id="319" parent="244" name="id_przedmiotu">
+    <column id="322" parent="244" name="id_przedmiotu">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="320" parent="244" name="nazwa">
+    <column id="323" parent="244" name="nazwa">
       <Position>2</Position>
       <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="321" parent="244" name="PRIMARY">
+    <key id="324" parent="244" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id_przedmiotu</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="322" parent="244" name="przedmioty_delete">
+    <trigger id="325" parent="244" name="przedmioty_delete">
       <SourceTextLength>66</SourceTextLength>
       <Turn>after-row</Turn>
       <Events>D</Events>
     </trigger>
-    <column id="323" parent="245" name="nr_sali">
+    <column id="326" parent="245" name="nr_sali">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="324" parent="245" name="pojemnosc">
+    <column id="327" parent="245" name="pojemnosc">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="325" parent="245" name="typ">
+    <column id="328" parent="245" name="typ">
       <Position>3</Position>
       <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;ogólna&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="326" parent="245" name="PRIMARY">
+    <key id="329" parent="245" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>nr_sali</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="327" parent="245" name="sale_insert">
+    <trigger id="330" parent="245" name="sale_insert">
       <SourceTextLength>148</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="328" parent="245" name="sale_update">
+    <trigger id="331" parent="245" name="sale_update">
       <SourceTextLength>291</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
-    <column id="329" parent="246" name="pesel">
+    <column id="332" parent="246" name="pesel">
       <Position>1</Position>
       <DataType>char(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="330" parent="246" name="imie">
+    <column id="333" parent="246" name="imie">
       <Position>2</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="331" parent="246" name="nazwisko">
+    <column id="334" parent="246" name="nazwisko">
       <Position>3</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="332" parent="246" name="data_urodzenia">
+    <column id="335" parent="246" name="data_urodzenia">
       <Position>4</Position>
       <DataType>date|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="333" parent="246" name="adres">
+    <column id="336" parent="246" name="adres">
       <Position>5</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="334" parent="246" name="tel_do_rodzica1">
+    <column id="337" parent="246" name="tel_do_rodzica1">
       <Position>6</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="335" parent="246" name="tel_do_rodzica2">
+    <column id="338" parent="246" name="tel_do_rodzica2">
       <Position>7</Position>
       <DataType>int(11)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="336" parent="246" name="uczniowie_imie_nazwisko_index">
+    <index id="339" parent="246" name="uczniowie_imie_nazwisko_index">
       <ColNames>imie
 nazwisko</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="337" parent="246" name="PRIMARY">
+    <key id="340" parent="246" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>pesel</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="338" parent="246" name="uczniowie_insert">
+    <trigger id="341" parent="246" name="uczniowie_insert">
       <SourceTextLength>1599</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="339" parent="246" name="uczniowie_update">
+    <trigger id="342" parent="246" name="uczniowie_update">
       <SourceTextLength>1623</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
-    <trigger id="340" parent="246" name="uczniowie_delete">
+    <trigger id="343" parent="246" name="uczniowie_delete">
       <SourceTextLength>361</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
-    <column id="341" parent="247" name="id_zajec">
+    <column id="344" parent="247" name="id_zajec">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="342" parent="247" name="id_kursu">
+    <column id="345" parent="247" name="id_kursu">
       <Position>2</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="343" parent="247" name="id_klasy">
+    <column id="346" parent="247" name="id_klasy">
       <Position>3</Position>
       <DataType>char(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="344" parent="247" name="id_sali">
+    <column id="347" parent="247" name="id_sali">
       <Position>4</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="345" parent="247" name="nr_lekcji">
+    <column id="348" parent="247" name="nr_lekcji">
       <Position>5</Position>
       <DataType>tinyint(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="346" parent="247" name="dzien_tygodnia">
+    <column id="349" parent="247" name="dzien_tygodnia">
       <Position>6</Position>
       <DataType>enum(&apos;pon&apos;, &apos;wt&apos;, &apos;śr&apos;, &apos;czw&apos;, &apos;pt&apos;)|0e</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="347" parent="247" name="semestr">
+    <column id="350" parent="247" name="semestr">
       <Position>7</Position>
       <DataType>char(4)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="348" parent="247" name="zajecia_id_nauczyciela_index">
+    <index id="351" parent="247" name="zajecia_id_nauczyciela_index">
       <ColNames>id_kursu</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="349" parent="247" name="zajecia_id_klasy_id_przedmiotu_index">
+    <index id="352" parent="247" name="zajecia_id_klasy_id_przedmiotu_index">
       <ColNames>id_klasy
 id_kursu</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="350" parent="247" name="zajecia_id_klasy_index">
+    <index id="353" parent="247" name="zajecia_id_klasy_index">
       <ColNames>id_klasy</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="351" parent="247" name="id_sali">
+    <index id="354" parent="247" name="id_sali">
       <ColNames>id_sali</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="352" parent="247" name="nr_lekcji">
+    <index id="355" parent="247" name="nr_lekcji">
       <ColNames>nr_lekcji</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="353" parent="247" name="PRIMARY">
+    <key id="356" parent="247" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id_zajec</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="354" parent="247" name="zajecia_ibfk_1">
+    <foreign-key id="357" parent="247" name="zajecia_ibfk_1">
       <ColNames>id_kursu</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>kursy</RefTableName>
       <RefColNames>id_kursu</RefColNames>
     </foreign-key>
-    <foreign-key id="355" parent="247" name="zajecia_ibfk_2">
+    <foreign-key id="358" parent="247" name="zajecia_ibfk_2">
       <ColNames>id_klasy</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>klasy</RefTableName>
       <RefColNames>id_klasy</RefColNames>
     </foreign-key>
-    <foreign-key id="356" parent="247" name="zajecia_ibfk_3">
+    <foreign-key id="359" parent="247" name="zajecia_ibfk_3">
       <ColNames>id_sali</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>sale</RefTableName>
       <RefColNames>nr_sali</RefColNames>
     </foreign-key>
-    <foreign-key id="357" parent="247" name="zajecia_ibfk_4">
+    <foreign-key id="360" parent="247" name="zajecia_ibfk_4">
       <ColNames>nr_lekcji</ColNames>
       <RefSchemaName>amalinowska_sztosik</RefSchemaName>
       <RefTableName>dzwonki</RefTableName>
       <RefColNames>nr_lekcji</RefColNames>
     </foreign-key>
-    <trigger id="358" parent="247" name="zajecia_insert">
+    <trigger id="361" parent="247" name="zajecia_insert">
       <SourceTextLength>456</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <trigger id="359" parent="247" name="zajecia_update">
+    <trigger id="362" parent="247" name="zajecia_update">
       <SourceTextLength>456</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
-    <argument id="360" parent="253">
+    <argument id="363" parent="252" name="semestr_">
+      <Position>1</Position>
+      <DataType>char(4)|0s</DataType>
+    </argument>
+    <argument id="364" parent="255">
       <ArgumentDirection>R</ArgumentDirection>
       <DataType>date|0s</DataType>
     </argument>
-    <argument id="361" parent="253" name="wiek">
+    <argument id="365" parent="255" name="fromDate">
+      <Position>1</Position>
+      <DataType>date|0s</DataType>
+    </argument>
+    <argument id="366" parent="255" name="toDate">
+      <Position>2</Position>
+      <DataType>date|0s</DataType>
+    </argument>
+    <argument id="367" parent="256">
+      <ArgumentDirection>R</ArgumentDirection>
+      <DataType>date|0s</DataType>
+    </argument>
+    <argument id="368" parent="256" name="wiek">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
     </argument>
