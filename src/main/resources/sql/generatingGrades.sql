@@ -139,23 +139,16 @@ BLOCK1 : BEGIN
               SET k = 0;
               SET liczba_ocen = floor(rand()*5) + 5;
               WHILE k < liczba_ocen DO
-                SET sukces = FALSE;
-                WHILE sukces = FALSE DO
-                  SET sukces = TRUE;
                   SET wartosc_oc = elt(floor(rand()*14)+1, '1', '2-', '2', '2+', '3-', '3', '3+', '4-', '4', '4+', '5-', '5', '5+', '6');
                   SET waga_oc = elt(floor(rand()*5)+1, 1,2,3,4,5);
                   IF substring(semestr_,4,1) = '1' THEN
                     SET data_oceny = losowa_data_miedzy(concat('20',rok, '-09-01'), concat('20', rok+1, '-01-30'));
-                    SET @c = data_oceny;
                   ELSE
                     SET data_oceny = losowa_data_miedzy(concat('20',rok,'-02-01'), concat('20',rok,'-06-30'));
                   END IF;
                   INSERT INTO oceny (id_ucznia, id_kursu, data, semestr, typ, wartosc, waga, opis)
                   VALUES (psl, kurs, data_oceny, semestr_, 'cząstkowa', wartosc_oc, waga_oc, elt(waga_oc, 'praca domowa', 'odpowiedź', 'kartkówka', 'test', 'sprawdzian'));
-                  IF sukces = TRUE THEN
                     SET k = k + 1;
-                  END IF;
-                END WHILE ;
               END WHILE;
 
             END LOOP;
@@ -186,3 +179,23 @@ SELECT (substring('11/2', 4,1) LIKE '2');
 
 SELECT DISTINCT id_klasy FROM oceny JOIN klasa_uczniowie ON oceny.id_ucznia = klasa_uczniowie.id_ucznia;
 SELECT DISTINCT id_ucznia FROM oceny;
+DELETE FROM oceny WHERE semestr LIKE '11/1';
+
+SELECT @max_lo, @max_k, @ucz, @c;
+
+SELECT DISTINCT id_kursu FROM zajecia JOIN klasa_uczniowie ON zajecia.id_klasy = klasa_uczniowie.id_klasy WHERE id_ucznia LIKE '05020754432' AND semestr LIKE '18/1';
+
+SELECT id_ucznia, count(DISTINCT id_kursu) as ile
+FROM zajecia JOIN klasa_uczniowie ON zajecia.id_klasy = klasa_uczniowie.id_klasy WHERE semestr LIKE '11/1' GROUP BY id_ucznia ORDER BY ile desc ;
+
+SELECT id_klasy, count(DISTINCT id_kursu) as ile FROM zajecia WHERE semestr LIKE '11/1' GROUP BY id_klasy ORDER BY ile desc;
+SELECT liczebnosc FROM klasy WHERE id_klasy LIKE '11%';
+
+SELECT id_ucznia,count( wartosc) FROM oceny WHERE semestr LIKE '11/1' GROUP BY id_ucznia;
+SELECT id_klasy, count( DISTINCT id_kursu) FROM zajecia WHERE semestr LIKE '11/1' GROUP BY id_klasy;
+SELECT id_klasy, zajecia.id_kursu, nazwa FROM zajecia JOIN kursy k ON zajecia.id_kursu = k.id_kursu JOIN przedmioty p ON k.id_przedmiotu = p.id_przedmiotu WHERE semestr LIKE '11/1' AND id_klasy = '11/A' GROUP BY id_klasy, k.id_kursu;
+
+DELETE FROM oceny;
+
+ALTER TABLE oceny
+  AUTO_INCREMENT = 1;

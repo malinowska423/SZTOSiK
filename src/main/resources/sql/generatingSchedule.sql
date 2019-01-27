@@ -56,10 +56,16 @@ END;
 
 CALL generuj_plan();
 
-# SELECT dzien_tygodnia, nr_lekcji, nazwa FROM zajecia JOIN kursy k ON zajecia.id_kursu = k.id_kursu JOIN przedmioty p ON k.id_przedmiotu = p.id_przedmiotu
-# WHERE semestr LIKE '18/1' AND id_klasy LIKE '11/A' ORDER BY dzien_tygodnia,nr_lekcji;
+# SELECT dzien_tygodnia, nr_lekcji, nazwa, k.id_kursu FROM zajecia JOIN kursy k ON zajecia.id_kursu = k.id_kursu JOIN przedmioty p ON k.id_przedmiotu = p.id_przedmiotu
+# WHERE semestr LIKE '18/1' AND id_klasy LIKE '11/A' ORDER BY nazwa;
+#
+# INSERT INTO zajecia (id_kursu, id_klasy, id_sali, nr_lekcji, dzien_tygodnia, semestr) VALUES (183, '11/A', 1, 0, 'pt', '18/1');
 #
 # SELECT id_klasy, count(DISTINCT semestr) FROM zajecia GROUP BY id_klasy;
 #
 # SELECT id_klasy, semestr FROM zajecia WHERE id_klasy LIKE '18/A' GROUP BY semestr;
 # DELETE FROM zajecia;
+#
+# SELECT (SELECT DISTINCT zajecia.id_kursu FROM zajecia JOIN kursy k ON zajecia.id_kursu = k.id_kursu
+#                                               JOIN przedmioty p ON k.id_przedmiotu = p.id_przedmiotu
+# WHERE semestr = '18/1' AND id_klasy = '11/A' AND nazwa LIKE (SELECT nazwa FROM kursy JOIN przedmioty on kursy.id_przedmiotu = przedmioty.id_przedmiotu WHERE id_kursu = 183)) t;
