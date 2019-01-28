@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -36,8 +37,13 @@ public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         launchLogInScene();
-//        loader = new FXMLLoader(getClass().getResource("/fxml/" + LogInControls.appMode));
         System.out.println("Ładuję " + LogInControls.appMode);
+        loader = new FXMLLoader(getClass().getResource("/fxml/" + LogInControls.appMode));
+        Parent root = loader.load();
+        primaryStage.setTitle("SZTOSiK");
+        primaryStage.setScene(new Scene(root, 1280, 720));
+        primaryStage.setResizable(false);
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.show();
     }
 
@@ -50,6 +56,7 @@ public class GUI extends Application {
         logInStage.setResizable(false);
         logInStage.initModality(Modality.APPLICATION_MODAL);
         logInStage.setOnCloseRequest(windowEvent -> System.exit(0));
+        logInStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         logInStage.showAndWait();
     }
 }
