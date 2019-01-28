@@ -1,12 +1,14 @@
 package com.sztosik;
 
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.sql.SQLException;
 
 public class LogInControls {
     public static String appMode;
@@ -21,22 +23,35 @@ public class LogInControls {
     PasswordField password;
 
     @FXML
+    Label errorLabel;
+
+    @FXML
     private void logIn(){
 //        TODO: implement method by connecting to DB and logging in the user
-
+        errorLabel.setText("");
+        User.getInstance().setLogin(user.getText());
+        User.getInstance().setPassword(password.getText());
         switch (userType.getSelectionModel().getSelectedIndex()){
             case 0:
                 appMode = "student.fxml";
+                User.getInstance().setType(User.Type.STUDENT);
                 break;
             case 1:
                 appMode = "teacher.fxml";
+                User.getInstance().setType(User.Type.TEACHER);
                 break;
             case 2:
                 appMode = "admin.fxml";
+                User.getInstance().setType(User.Type.ADMIN);
                 break;
          }
         System.out.println("Użytkownik typu " + userType.getSelectionModel().getSelectedItem() + " loguje się");
-        ((Stage) userType.getScene().getWindow()).close();
+        try {
+            DatabaseConnection.connect(User.getInstance().getLogin(), User.getInstance().getPassword());
+            ((Stage) userType.getScene().getWindow()).close();
+        } catch (SQLException e) {
+            errorLabel.setText("Błędna nazwa użytkownika\n lub hasło");
+        }
     }
 
     public void initialize() {
@@ -44,5 +59,7 @@ public class LogInControls {
                 "Uczeń/Opiekun", "Nauczyciel", "Administrator")
         );
         userType.getSelectionModel().selectFirst();
+        user.setText("amalinowska_sztosik");
+        password.setText("spioch2K19$");
     }
 }

@@ -3,13 +3,13 @@ package com.sztosik;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +32,7 @@ public class StudentControls {
         ComboBox semester = new ComboBox<>(getOptions("grades"));
         semester.getSelectionModel().selectFirst();
         filtersPane.getChildren().add(semester);
-        Button confirm = new Button("Confirm");
         semester.setOnAction(actionEvent -> showGradesForSemester(semester.getSelectionModel().getSelectedItem().toString()));
-        filtersPane.getChildren().add(confirm);
         showGradesForSemester(semester.getSelectionModel().getSelectedItem().toString());
     }
 

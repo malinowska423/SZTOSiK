@@ -16,19 +16,7 @@ import java.io.IOException;
 
 public class GUI extends Application {
 
-    private static GUI instance;
     private FXMLLoader loader;
-
-    static GUI getInstance() {
-        if (instance == null) {
-            synchronized (GUI.class) {
-                if (instance == null) {
-                    instance = new GUI();
-                }
-            }
-        }
-        return instance;
-    }
 
     public static void main(String[] args) {
         launch(args);
