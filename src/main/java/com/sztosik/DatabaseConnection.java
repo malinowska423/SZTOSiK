@@ -12,10 +12,17 @@ public class DatabaseConnection {
                         user,password);
     }
 
-    public static String executeQuery(String query) throws SQLException{
+    public static String executeQuery(String query, int columns) throws SQLException{
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(query);
-        return result.toString();
+        StringBuilder results = new StringBuilder();
+        while (result.next()) {
+            for (int i = 1; i <= columns; i++) {
+                results.append(result.getString(i)).append(" ");
+            }
+            results.append(";");
+        }
+        return results.toString();
     }
 
 }

@@ -47,7 +47,8 @@ public class LogInControls {
          }
         System.out.println("Użytkownik typu " + userType.getSelectionModel().getSelectedItem() + " loguje się");
         try {
-            DatabaseConnection.connect(User.getInstance().getLogin(), User.getInstance().getPassword());
+//            DatabaseConnection.connect(User.getInstance().getLogin(), User.getInstance().getPassword());
+            DatabaseConnection.connect("amalinowska_sztosik", "spioch2K19$");
             ((Stage) userType.getScene().getWindow()).close();
         } catch (SQLException e) {
             errorLabel.setText("Błędna nazwa użytkownika\n lub hasło");
@@ -59,7 +60,9 @@ public class LogInControls {
                 "Uczeń/Opiekun", "Nauczyciel", "Administrator")
         );
         userType.getSelectionModel().selectFirst();
-        user.setText("amalinowska_sztosik");
-        password.setText("spioch2K19$");
+//        user.setText("amalinowska_sztosik");
+//        password.setText("spioch2K19$");
+        user.setText("05013011243");
+        password.setText("fajneHaslo");
     }
 }
