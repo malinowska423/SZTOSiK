@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.control.ComboBox?>
+<AnchorPane prefHeight="550.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sztosik.LogInControls">
+   <children>
+      <Label layoutX="217.0" layoutY="187.0" prefHeight="44.0" prefWidth="347.0" text="Zaloguj się do systemu SZTOSiK" />
+      <Label layoutX="217.0" layoutY="280.0" prefHeight="27.0" prefWidth="347.0" text="Nazwa użytkownika" />
+      <TextField fx:id="user" layoutX="217.0" layoutY="307.0" prefHeight="44.0" prefWidth="347.0" />
+      <Label layoutX="217.0" layoutY="368.0" prefHeight="27.0" prefWidth="347.0" text="Hasło" />
+      <PasswordField fx:id="password" layoutX="217.0" layoutY="395.0" prefHeight="44.0" prefWidth="347.0" />
+      <Button layoutX="405.0" layoutY="462.0" mnemonicParsing="false" onAction="#logIn" prefHeight="44.0" prefWidth="159.0" text="Zaloguj" />
+      <ComboBox fx:id="userType" layoutX="217.0" layoutY="231.0" prefHeight="44.0" prefWidth="347.0" />
+   </children>
+</AnchorPane>

@@ -13,6 +13,7 @@ public class Interface {
                 for (int i=1; i<7; i++){
                     System.out.print(result.getString(i) + " ");
                 }
+                System.out.println();
             }
 
         } catch (SQLException e) {
