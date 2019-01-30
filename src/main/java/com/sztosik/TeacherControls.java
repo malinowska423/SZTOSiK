@@ -8,18 +8,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class TeacherControls {
@@ -74,7 +75,7 @@ public class TeacherControls {
 
 
             semester.setOnAction(actionEvent -> {
-                subject.setItems(getOptions("subject", semester.getSelectionModel().getSelectedItem().toString()));
+                subject.setItems(getOptions("subjectClass", semester.getSelectionModel().getSelectedItem().toString() + ";" + yourClass));
                 subject.getSelectionModel().selectFirst();
                 showYourClassGradesForSemester(semester.getSelectionModel().getSelectedItem().toString(), subject.getSelectionModel().getSelectedItem().toString(), yourClass);
             });
@@ -471,13 +472,44 @@ public class TeacherControls {
         Stage stage = new Stage();
         stage.setTitle("Dodawanie oceny dla " + first + " " + last + " dla przedmiotu " + sub);
         GridPane grid = new GridPane();
-        stage.setScene(new Scene(grid,500,600));
+        stage.setScene(new Scene(grid,500,300));
+        grid.setAlignment(Pos.CENTER);
         TextField val = new TextField();
+        val.setPromptText("wartość");
         TextField wag = new TextField();
+        wag.setPromptText("waga");
         TextField desc = new TextField();
+        desc.setPromptText("opis");
+        TextField type = new TextField();
+        type.setPromptText("typ");
+        Button confirm = new Button("Dodaj ocenę");
+        Label error = new Label("Wystąpił jakiś błąd");
+        error.setVisible(false);
+        confirm.setOnAction(actionEvent -> {
+            error.setVisible(false);
+            if (!val.getText().isEmpty() && !wag.getText().isEmpty() && !desc.getText().isEmpty() && !type.getText().isEmpty()){
+                try {
+                    Statement stm = DatabaseConnection.connection.createStatement();
+                    stm.executeQuery("INSERT INTO oceny (id_ucznia, id_kursu, data, semestr, typ, wartosc, waga, opis) VALUES " +
+                            "('" + id + "', " + courseId + ", '" + LocalDate.now() + "', '" + semester + "', '" + type.getText() + "', '" + val.getText() + "', " +
+                            "'" + wag.getText() + "', '" + desc.getText() + "');");
+                    stage.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    error.setVisible(true);
+                }
+
+            } else {
+                error.setVisible(true);
+            }
+        });
         grid.add(val,0,0);
         grid.add(wag,0,2);
         grid.add(desc,0,4);
+        grid.add(type, 0,6);
+        grid.add(confirm, 0,8);
+        grid.add(error, 0,1);
+        grid.setVgap(5);
         stage.showAndWait();
 
     }
