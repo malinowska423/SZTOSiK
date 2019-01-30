@@ -1,10 +1,16 @@
 package com.sztosik;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminControls {
     @FXML
@@ -17,7 +23,13 @@ public class AdminControls {
     Pane gradesPane;
 
     @FXML
+    VBox gradesBox;
+
+    @FXML
     Pane schedulePane;
+
+    @FXML
+    GridPane grid;
 
     @FXML
     BorderPane addPane;
@@ -68,16 +80,248 @@ public class AdminControls {
 
     @FXML
     void showSchedule(){
-        System.out.println("Pokazuję plan administratora");
         setAllNotVisible();
         filtersPane.setVisible(true);
         schedulePane.setVisible(true);
+        gradesPane.setVisible(false);
+        System.out.println("Pokazuję plan ucznia");
+        filtersPane.getChildren().removeAll(filtersPane.getChildren());
+        filtersPane.getChildren().add(new Label("Semestr: "));
+        ComboBox semester = new ComboBox<>(getOptions("semester", ""));
+        semester.getSelectionModel().selectFirst();
+        filtersPane.getChildren().add(semester);
+
+        filtersPane.getChildren().add(new Label("Klasa: "));
+        ComboBox schoolClass = new ComboBox<>(getOptions("class", semester.getSelectionModel().getSelectedItem().toString()));
+        schoolClass.setOnAction(actionEvent -> {
+            if(schoolClass.getSelectionModel().getSelectedItem() != null)
+                showScheduleForClass(semester.getSelectionModel().getSelectedItem().toString(),
+                        schoolClass.getSelectionModel().getSelectedItem().toString());
+        });
+        filtersPane.getChildren().add(schoolClass);
+
+        filtersPane.getChildren().add(new Label("Nauczyciel: "));
+        ComboBox teacher = new ComboBox<>(getOptions("teacher", semester.getSelectionModel().getSelectedItem().toString()));
+        teacher.setOnAction(actionEvent ->
+                showScheduleForTeacher(semester.getSelectionModel().getSelectedItem().toString(),
+                        teacher.getSelectionModel().getSelectedItem().toString()));
+        filtersPane.getChildren().add(teacher);
+
+        filtersPane.getChildren().add(new Label("Sala: "));
+        ComboBox classRoom = new ComboBox<>(getOptions("classroom", semester.getSelectionModel().getSelectedItem().toString()));
+        classRoom.setOnAction(actionEvent ->
+                showScheduleForClassroom(semester.getSelectionModel().getSelectedItem().toString(),
+                        classRoom.getSelectionModel().getSelectedItem().toString()));
+        filtersPane.getChildren().add(classRoom);
+
+        semester.setOnAction(actionEvent -> {
+            schoolClass.setItems(getOptions("class", semester.getSelectionModel().getSelectedItem().toString()));
+            teacher.setItems(getOptions("teacher", semester.getSelectionModel().getSelectedItem().toString()));
+            classRoom.setItems(getOptions("classroom", semester.getSelectionModel().getSelectedItem().toString()));
+        });
+
     }
+
+    private ObservableList<String> getOptions(String filterType, String semester) {
+//        TODO: implement method where sql queries find options for filters
+        List<String> options = new ArrayList<>();
+        switch (filterType) {
+            case "semester":
+                options.addAll(FXCollections.observableArrayList(queryOptions("SELECT DISTINCT semestr FROM zajecia JOIN " +
+                        "klasa_uczniowie on zajecia.id_klasy = klasa_uczniowie.id_klasy " +
+                        "WHERE id_ucznia LIKE '" + User.getInstance().getLogin() + "' ORDER BY semestr DESC;")));
+                break;
+            case "grades":
+                options.addAll(FXCollections.observableArrayList(queryOptions("SELECT DISTINCT semestr FROM oceny " +
+                        "WHERE id_ucznia LIKE '" + User.getInstance().getLogin() + "' ORDER BY semestr DESC;")));
+                break;
+            case "class":
+                options.addAll(FXCollections.observableArrayList(queryOptions("SELECT DISTINCT id_klasy FROM zajecia " +
+                        "WHERE semestr LIKE '" + semester + "' ORDER BY id_klasy;")));
+                break;
+            case "teacher":
+                try {
+                    options.addAll(FXCollections.observableArrayList(DatabaseConnection.executeQuery(
+                            "SELECT imie, nazwisko FROM nauczyciele ORDER BY nazwisko, imie;", 2
+                    ).split(";")));
+                } catch (SQLException e) {
+                    options.add("Brak nauczycieli");
+                }
+                break;
+            case "classroom":
+                options.addAll(FXCollections.observableArrayList(queryOptions("SELECT DISTINCT id_sali FROM zajecia " +
+                        "WHERE semestr LIKE '" + semester + "' ORDER BY id_sali;")));
+                break;
+        }
+        return FXCollections.observableArrayList(options);
+    }
+
+    private void showScheduleForClass(String semester, String schoolClass) {
+//        TODO: run query with schedule for the class in the semester
+        grid.getChildren().clear();
+        try {
+            System.out.println("|" + semester + "|" + schoolClass + "|");
+            Statement statement = DatabaseConnection.connection.createStatement();
+            ResultSet result = statement.executeQuery("select nr_lekcji, nazwa, id_sali,dzien_tygodnia,imie,nazwisko from zajecia " +
+                    "join kursy k on zajecia.id_kursu = k.id_kursu " +
+                    "join przedmioty p on k.id_przedmiotu = p.id_przedmiotu " +
+                    "join nauczyciele n on k.id_nauczyciela = n.pesel " +
+                    "where id_klasy = '" + schoolClass + "'" +
+                    "and semestr = '" + semester + "' order by dzien_tygodnia,nr_lekcji;");
+            while (result.next()){
+                int idx=-1;
+                switch (result.getString("dzien_tygodnia")) {
+                    case "pon":
+                        idx = 1;
+                        break;
+                    case "wt":
+                        idx = 2;
+                        break;
+                    case "śr":
+                        idx = 3;
+                        break;
+                    case "czw":
+                        idx = 4;
+                        break;
+                    case "pt":
+                        idx = 5;
+                        break;
+                }
+                Label label = new Label(result.getString("nazwa")+ "  " +result.getString("id_sali") + "\n" + result.getString("imie").charAt(0) + "" + result.getString("nazwisko").charAt(0));
+                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-text-alignment: center;-fx-alignment: center;-fx-background-color: rgba(199,199,200,0.5);-fx-font-size: 14");
+                grid.add(label, idx,result.getInt("nr_lekcji")-1);
+            }
+            result = statement.executeQuery("select nr_lekcji,poczatek,koniec from dzwonki where nr_lekcji between 1 and 7");
+            while (result.next()) {
+                Label label = new Label(result.getString("poczatek").substring(0,5) + "-" + result.getString("koniec").substring(0,5));
+                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-alignment: center;-fx-font-size: 24");
+                grid.add(label,0,result.getInt("nr_lekcji")-1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Pokazuję plan dla klasy " + schoolClass + " w semestrze " + semester);
+    }
+
+    private void showScheduleForTeacher(String semester, String teacher) {
+//        TODO: run query with schedule for the teacher in the semester
+        grid.getChildren().clear();
+        try {
+            System.out.println("|" + semester + "|" + teacher + "|");
+            Statement statement = DatabaseConnection.connection.createStatement();
+            ResultSet result = statement.executeQuery("select nr_lekcji, nazwa, id_sali,dzien_tygodnia,id_klasy from zajecia " +
+                    "join kursy k on zajecia.id_kursu = k.id_kursu " +
+                    "join przedmioty p on k.id_przedmiotu = p.id_przedmiotu " +
+                    "join nauczyciele n on k.id_nauczyciela = n.pesel " +
+                    "where imie = '" + teacher.split(" ")[0] + "' " +
+                    "and nazwisko = '" + teacher.split(" ")[1] + "' " +
+                    "and semestr = '" + semester + "' order by dzien_tygodnia,nr_lekcji;");
+            while (result.next()){
+                int idx=-1;
+                switch (result.getString("dzien_tygodnia")) {
+                    case "pon":
+                        idx = 1;
+                        break;
+                    case "wt":
+                        idx = 2;
+                        break;
+                    case "śr":
+                        idx = 3;
+                        break;
+                    case "czw":
+                        idx = 4;
+                        break;
+                    case "pt":
+                        idx = 5;
+                        break;
+                }
+                Label label = new Label(result.getString("nazwa")+ "  " +result.getString("id_sali") + "\nklasa " + result.getString("id_klasy"));
+                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-alignment: center;-fx-background-color: rgba(199,199,200,0.5);-fx-font-size: 14");
+                grid.add(label, idx,result.getInt("nr_lekcji")-1);
+            }
+            result = statement.executeQuery("select nr_lekcji,poczatek,koniec from dzwonki where nr_lekcji between 1 and 7");
+            while (result.next()) {
+                Label label = new Label(result.getString("poczatek").substring(0,5) + "-" + result.getString("koniec").substring(0,5));
+                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-alignment: center;-fx-font-size: 24");
+                grid.add(label,0,result.getInt("nr_lekcji")-1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Pokazuję plan dla nauczyciela " + teacher + " w semestrze " + semester);
+    }
+
+    private void showScheduleForClassroom(String semester, String classroom) {
+//        TODO: run query with the schedule for the classroom in the semester
+        grid.getChildren().clear();
+        try {
+            System.out.println("|" + semester + "|" + classroom + "|");
+            Statement statement = DatabaseConnection.connection.createStatement();
+            ResultSet result = statement.executeQuery("select nr_lekcji, nazwa,dzien_tygodnia,id_klasy,imie,nazwisko from zajecia " +
+                    "join kursy k on zajecia.id_kursu = k.id_kursu " +
+                    "join przedmioty p on k.id_przedmiotu = p.id_przedmiotu " +
+                    "join nauczyciele n on k.id_nauczyciela = n.pesel " +
+                    "where id_sali = " + classroom + " " +
+                    "and semestr = '" + semester + "' order by dzien_tygodnia,nr_lekcji;");
+            while (result.next()){
+                int idx=-1;
+                switch (result.getString("dzien_tygodnia")) {
+                    case "pon":
+                        idx = 1;
+                        break;
+                    case "wt":
+                        idx = 2;
+                        break;
+                    case "śr":
+                        idx = 3;
+                        break;
+                    case "czw":
+                        idx = 4;
+                        break;
+                    case "pt":
+                        idx = 5;
+                        break;
+                }
+                Label label = new Label(result.getString("nazwa") + "\n" + result.getString("imie").charAt(0) + "" + result.getString("nazwisko").charAt(0) +" klasa " + result.getString("id_klasy"));
+                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-alignment: center;-fx-background-color: rgba(199,199,200,0.5);-fx-font-size: 14");
+                grid.add(label, idx,result.getInt("nr_lekcji")-1);
+            }
+            result = statement.executeQuery("select nr_lekcji,poczatek,koniec from dzwonki where nr_lekcji between 1 and 7");
+            while (result.next()) {
+                Label label = new Label(result.getString("poczatek").substring(0,5) + "-" + result.getString("koniec").substring(0,5));
+                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-alignment: center;-fx-font-size: 24");
+                grid.add(label,0,result.getInt("nr_lekcji")-1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Pokazuję plan dla pracowni " + classroom + " w semestrze " + semester);
+    }
+
+    private String [] queryOptions(String query) {
+        StringBuilder results = new StringBuilder();
+        try {
+            Statement statement = DatabaseConnection.connection.createStatement();
+            ResultSet result = statement.executeQuery(query);
+            while (result.next()) {
+                results.append(result.getString(1)).append(";");
+            }
+            return results.toString().split(";");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @FXML
     void add() {
         System.out.println("Dodaję coś jako administrator");
         setAllNotVisible();
+        setAllFormsNotVisible();
         addPane.setVisible(true);
         addList.setVisible(true);
         formAddPane.setVisible(true);
@@ -139,38 +383,47 @@ public class AdminControls {
 
     private void showAddClassForm() {
         System.out.println("Pokazuję formularz dodawania klasy");
+        setAllFormsNotVisible();
     }
 
     private void showAddCourseForm() {
         System.out.println("Pokazuję formularz dodawania kursu");
+        setAllFormsNotVisible();
     }
 
     private void showAddTeacherForm() {
         System.out.println("Pokazuję formularz dodawania nauczyciela");
+        setAllFormsNotVisible();
     }
 
     private void showAddGradeForm() {
         System.out.println("Pokazuję formularz dodawania oceny");
+        setAllFormsNotVisible();
     }
 
     private void showAddSubjectForm() {
         System.out.println("Pokazuję formularz dodawania przedmiotu");
+        setAllFormsNotVisible();
     }
 
     private void showAddClassRoomForm() {
         System.out.println("Pokazuję formularz dodawania sali lekcyjnej");
+        setAllFormsNotVisible();
     }
 
     private void showAddScheduleForm() {
         System.out.println("Pokazuję formularz dodawania zajęć");
+        setAllFormsNotVisible();
     }
 
     private void showAddBellForm() {
         System.out.println("Pokazuję formularz dodawania lekcji");
+        setAllFormsNotVisible();
     }
 
     private void showAddStudentForm() {
         System.out.println("Pokazuję formularz dodawania ucznia");
+        setAllFormsNotVisible();
         addStudentForm.setVisible(true);
     }
 
@@ -206,6 +459,9 @@ public class AdminControls {
         addPane.setVisible(false);
         formAddPane.setVisible(false);
         addList.setVisible(false);
+    }
+
+    private void setAllFormsNotVisible() {
         addStudentForm.setVisible(false);
     }
 
