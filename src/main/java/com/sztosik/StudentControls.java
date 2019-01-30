@@ -37,12 +37,10 @@ public class StudentControls {
     @FXML
     Pane gradesPane;
 
-    @FXML
-    VBox gradesBox;
 
     public void initialize() {
         schedulePane.setVisible(false);
-        gradesBox.setVisible(false);
+        gradesPane.setVisible(false);
     }
 
     @FXML
@@ -73,7 +71,7 @@ public class StudentControls {
         filtersPane.getChildren().add(new Label("Klasa: "));
         ComboBox schoolClass = new ComboBox<>(getOptions("class", semester.getSelectionModel().getSelectedItem().toString()));
         schoolClass.setOnAction(actionEvent -> {
-                if(schoolClass.getSelectionModel().getSelectedItem() != null)
+                if(schoolClass.getSelectionModel().getSelectedItem() != null && semester.getSelectionModel().getSelectedItem() != null)
                 showScheduleForClass(semester.getSelectionModel().getSelectedItem().toString(),
                         schoolClass.getSelectionModel().getSelectedItem().toString());
         });
@@ -81,22 +79,36 @@ public class StudentControls {
 
         filtersPane.getChildren().add(new Label("Nauczyciel: "));
         ComboBox teacher = new ComboBox<>(getOptions("teacher", semester.getSelectionModel().getSelectedItem().toString()));
-        teacher.setOnAction(actionEvent ->
+        teacher.setOnAction(actionEvent -> {
+            if (teacher.getSelectionModel().getSelectedItem() != null && semester.getSelectionModel().getSelectedItem() != null)
                 showScheduleForTeacher(semester.getSelectionModel().getSelectedItem().toString(),
-                        teacher.getSelectionModel().getSelectedItem().toString()));
+                        teacher.getSelectionModel().getSelectedItem().toString());
+        });
         filtersPane.getChildren().add(teacher);
 
         filtersPane.getChildren().add(new Label("Sala: "));
         ComboBox classRoom = new ComboBox<>(getOptions("classroom", semester.getSelectionModel().getSelectedItem().toString()));
-        classRoom.setOnAction(actionEvent ->
+        classRoom.setOnAction(actionEvent -> {
+            if(classRoom.getSelectionModel().getSelectedItem() != null && semester.getSelectionModel().getSelectedItem() != null)
                 showScheduleForClassroom(semester.getSelectionModel().getSelectedItem().toString(),
-                        classRoom.getSelectionModel().getSelectedItem().toString()));
+                        classRoom.getSelectionModel().getSelectedItem().toString());
+        });
         filtersPane.getChildren().add(classRoom);
 
         semester.setOnAction(actionEvent -> {
-            schoolClass.setItems(getOptions("class", semester.getSelectionModel().getSelectedItem().toString()));
             teacher.setItems(getOptions("teacher", semester.getSelectionModel().getSelectedItem().toString()));
             classRoom.setItems(getOptions("classroom", semester.getSelectionModel().getSelectedItem().toString()));
+            schoolClass.setItems(getOptions("class", semester.getSelectionModel().getSelectedItem().toString()));
+            if(schoolClass.getSelectionModel().getSelectedItem() == null && teacher.getSelectionModel().getSelectedItem() == null && classRoom.getSelectionModel().getSelectedItem() == null){
+                try {
+                    String studentClass;
+                    studentClass = DatabaseConnection.executeQuery("SELECT id_klasy from klasa_uczniowie where id_ucznia = '" + User.getInstance().getLogin() + "'",1);
+                    studentClass = studentClass.substring(0,4);
+                    showScheduleForClass(semester.getSelectionModel().getSelectedItem().toString(),studentClass);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
         try {
@@ -181,7 +193,7 @@ public class StudentControls {
                 }
                 Label label = new Label(result.getString("wartosc"));
                 int waga = result.getInt("waga");
-                label.setStyle("-fx-font-size: 17;-fx-min-width: 25;-fx-alignment: center;-fx-background-color: rgba(" + 44*waga +"," + 50+30*waga + "," + 140+10*waga + ",1)");
+                label.setStyle("-fx-font-size: 17;-fx-min-width: 25;-fx-alignment: center;-fx-background-color: rgba(" + (255-44*waga) +"," + 50+30*waga + "," + 140+10*waga + ",1)");
                 if(result.getString("opis").equals("ocena rocz") || result.getString("opis").equals("ocena sem")){
                     label.setStyle("-fx-font-size: 17;-fx-min-width: 25;-fx-alignment: center;-fx-background-color: orange");
                 }
@@ -195,7 +207,6 @@ public class StudentControls {
                 description.setVisible(false);
                 description.setStyle("-fx-font-size: 15;-fx-min-width:200;-fx-min-height: 100;-fx-alignment: center;-fx-background-color: rgba(14,255,7,0.95)");
                 label.setOnMouseEntered(mouseEvent -> {
-                    System.out.println(mouseEvent.getScreenX());
                     description.setLayoutX(mouseEvent.getSceneX()-290);
                     description.setLayoutY(mouseEvent.getSceneY()-55);
                     description.setVisible(true);

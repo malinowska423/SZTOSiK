@@ -33,11 +33,7 @@
       <AnchorPane fx:id="rightPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <HBox fx:id="filtersPane" prefHeight="55.0" prefWidth="990.0" />
-            <Pane fx:id="gradesPane" layoutY="69.0" prefHeight="665.0" prefWidth="990.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="69.0">
-               <children>
-                  <VBox fx:id="gradesBox" prefHeight="665.0" prefWidth="990.0" />
-               </children>
-            </Pane>
+            <Pane fx:id="gradesPane" layoutY="69.0" prefHeight="665.0" prefWidth="990.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="69.0" />
             <Pane fx:id="schedulePane" layoutY="55.0" prefHeight="666.0" prefWidth="990.0">
                <children>
                   <GridPane prefHeight="72.0" prefWidth="990.0">

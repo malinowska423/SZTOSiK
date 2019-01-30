@@ -62,7 +62,7 @@ public class LogInControls {
         userType.getSelectionModel().selectFirst();
 //        user.setText("amalinowska_sztosik");
 //        password.setText("spioch2K19$");
-        user.setText("05013011243");
+        user.setText("92042157914");
         password.setText("fajneHaslo");
     }
 }
