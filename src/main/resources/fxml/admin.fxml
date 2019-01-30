@@ -143,6 +143,14 @@
                   </AnchorPane>
                </center>
             </BorderPane>
+            <AnchorPane fx:id="createBackupPane" prefHeight="720.0" prefWidth="990.0" visible="false">
+               <children>
+                  <Label layoutX="297.0" layoutY="39.0" prefHeight="49.0" prefWidth="368.0" text="Stwórz kopię zapasową" />
+                  <TextField fx:id="backupPath" layoutX="133.0" layoutY="126.0" prefHeight="19.0" prefWidth="636.0" promptText="ścieżka do pliku kopii zapasowej" />
+                  <Button layoutX="638.0" layoutY="158.0" mnemonicParsing="false" onAction="#createBackupFile" prefHeight="51.0" prefWidth="131.0" text="Stwórz" />
+                  <Label fx:id="errorBackup" layoutX="133.0" layoutY="167.0" prefHeight="29.0" prefWidth="363.0" text="Podaj ścieżkę do pliku" textFill="RED" visible="false" />
+               </children>
+            </AnchorPane>
             </children>
         </AnchorPane>
     </center>
