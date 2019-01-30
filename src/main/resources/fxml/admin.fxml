@@ -151,6 +151,14 @@
                   <Label fx:id="errorBackup" layoutX="133.0" layoutY="167.0" prefHeight="29.0" prefWidth="363.0" text="Podaj ścieżkę do pliku" textFill="RED" visible="false" />
                </children>
             </AnchorPane>
+            <AnchorPane fx:id="openBackupPane" layoutX="10.0" layoutY="10.0" prefHeight="720.0" prefWidth="990.0">
+               <children>
+                  <Label layoutX="297.0" layoutY="39.0" prefHeight="49.0" prefWidth="368.0" text="Otwórz z kopii zapasowej" />
+                  <TextField fx:id="backupFilePath" layoutX="133.0" layoutY="126.0" prefHeight="19.0" prefWidth="636.0" promptText="ścieżka do pliku kopii zapasowej" />
+                  <Button layoutX="638.0" layoutY="158.0" mnemonicParsing="false" onAction="#openBackupFile" prefHeight="51.0" prefWidth="131.0" text="Stwórz" />
+                  <Label fx:id="errorBackup1" layoutX="133.0" layoutY="167.0" prefHeight="29.0" prefWidth="363.0" text="Podaj ścieżkę do pliku" textFill="RED" visible="false" />
+               </children>
+            </AnchorPane>
             </children>
         </AnchorPane>
     </center>

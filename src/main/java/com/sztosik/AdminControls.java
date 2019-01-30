@@ -459,6 +459,7 @@ public class AdminControls {
         System.out.println("Tworzę kopię zapasową jako administrator");
         setAllNotVisible();
         createBackupPane.setVisible(true);
+        backupPath.setText("C:\\Program Files\\MariaDB 10.3\\bin\\mysqldump.exe");
     }
 
     @FXML
@@ -466,22 +467,30 @@ public class AdminControls {
         errorBackup.setVisible(false);
         if (!backupPath.getText().isEmpty()) {
 
-            System.out.println("Tworzę plik kopii zapasowej");
-//            try {
-//                Runtime rt = Runtime.getRuntime();
+            try {
+                System.out.println("Tworzę plik kopii zapasowej");
+                Runtime rt = Runtime.getRuntime();
 //                Process p = rt.exec("mysqldump -utodo_user -ptoto_passowrd --database mydb_name");
+                Process p = rt.exec(new String[]{"cmd.exe", "/c", "\"" + backupPath.getText() +
+                        "\" -h sql.amalinowska.nazwa.pl -u amalinowska_sztosik --password=\"spioch2K19$\" --routines amalinowska_sztosik > "
+                        + "src\\main\\resources\\sql\\backup.sql" });
 //                InputStream is=p.getInputStream();
-//                FileOutputStream fos = new FileOutputStream("mydb_abackup.sql");
+//                FileOutputStream fos = new FileOutputStream("tekst.txt");
 //                int ch;
 //                while((ch=is.read())!=-1) {
 //                    fos.write(ch);
 //                }
 //                fos.close();
 //                is.close();
-//                System.out.println("----SQL backup file generated: mydb_abackup.sql----");
-//            } catch (IOException e) {
-//                errorBackup.setVisible(true);
-//            }
+                p.waitFor();
+                System.out.println("Utworzono");
+                errorBackup.setText("Utworzono backup");
+            } catch (IOException e) {
+                errorBackup.setVisible(true);
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         } else {
             errorBackup.setVisible(true);
@@ -489,8 +498,51 @@ public class AdminControls {
     }
 
     @FXML
+    AnchorPane openBackupPane;
+
+    @FXML
+    TextField backupFilePath;
+
+    @FXML
+    Label errorBackup1;
+
+    @FXML
     void openBackup() {
         System.out.println("Otwieram kopię zapasową jako administrator");
+        setAllNotVisible();
+        openBackupPane.setVisible(true);
+        backupFilePath.setText("src\\main\\resources\\sql\\backup.sql");
+    }
+
+    @FXML
+    void openBackupFile() {
+        errorBackup1.setVisible(false);
+        if (!backupFilePath.getText().isEmpty()) {
+
+            try {
+                System.out.println("Otwieram plik kopii zapasowej");
+                Statement stm = DatabaseConnection.connection.createStatement();
+                Runtime rt = Runtime.getRuntime();
+//                Process p = rt.exec("mysqldump -utodo_user -ptoto_passowrd --database mydb_name");
+                String mysql = "C:\\Program Files\\MariaDB 10.3\\bin\\mysql.exe";
+                Process p = rt.exec(new String[]{"cmd.exe", "/c", "\"" + mysql +
+                        "\" -h sql.amalinowska.nazwa.pl -u amalinowska_sztosik --password=\"spioch2K19$\" amalinowska_sztosik < " +
+                backupFilePath.getText()});
+                p.waitFor();
+                System.out.println("Załadowano");
+                errorBackup.setText("Załadowano backup");
+            } catch (IOException e) {
+                errorBackup.setVisible(true);
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            errorBackup1.setVisible(true);
+        }
     }
 
     private void setAllNotVisible() {
@@ -501,6 +553,7 @@ public class AdminControls {
         formAddPane.setVisible(false);
         addList.setVisible(false);
         createBackupPane.setVisible(false);
+        openBackupPane.setVisible(false);
     }
 
     private void setAllFormsNotVisible() {
