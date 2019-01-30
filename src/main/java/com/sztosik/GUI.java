@@ -47,4 +47,6 @@ public class GUI extends Application {
         logInStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         logInStage.showAndWait();
     }
+
+
 }

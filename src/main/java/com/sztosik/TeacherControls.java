@@ -5,11 +5,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -201,7 +203,49 @@ public class TeacherControls {
 
     @FXML
     void addGrade() {
-        System.out.println("Dodaję ocenę jako nauczyciel");
+        schedulePane.setVisible(false);
+        gradesPane.setVisible(true);
+        System.out.println("Pokazuję oceny nauczyciela");
+        filtersPane.getChildren().removeAll(filtersPane.getChildren());
+        filtersPane.getChildren().add(new Label("Semestr: "));
+        ComboBox semester = new ComboBox<>(getOptions("grades", ""));
+        semester.getSelectionModel().selectFirst();
+        filtersPane.getChildren().add(semester);
+
+        filtersPane.getChildren().add(new Label("Przedmiot: "));
+        ComboBox subject = new ComboBox<>(getOptions("subject", semester.getSelectionModel().getSelectedItem().toString()));
+
+        filtersPane.getChildren().add(subject);
+        subject.getSelectionModel().selectFirst();
+
+        filtersPane.getChildren().add(new Label("Klasa: "));
+        ComboBox schoolClass = new ComboBox<>(getOptions("classTeacher", semester.getSelectionModel().getSelectedItem().toString() + ";"
+                + subject.getSelectionModel().getSelectedItem().toString()));
+        filtersPane.getChildren().add(schoolClass);
+        schoolClass.getSelectionModel().selectFirst();
+
+
+        subject.setOnAction(actionEvent -> {
+            if(subject.getSelectionModel().getSelectedItem() != null && semester.getSelectionModel().getSelectedItem() != null && schoolClass.getSelectionModel().getSelectedItem() != null)
+                showGradesForSemesterWithAddition(semester.getSelectionModel().getSelectedItem().toString(),
+                        subject.getSelectionModel().getSelectedItem().toString(), schoolClass.getSelectionModel().getSelectedItem().toString());
+        });
+
+        schoolClass.setOnAction(actionEvent -> {
+            if(schoolClass.getSelectionModel().getSelectedItem() != null && semester.getSelectionModel().getSelectedItem() != null && schoolClass.getSelectionModel().getSelectedItem() != null)
+                showGradesForSemesterWithAddition(semester.getSelectionModel().getSelectedItem().toString(), subject.getSelectionModel().getSelectedItem().toString(),
+                        schoolClass.getSelectionModel().getSelectedItem().toString());
+        });
+
+        semester.setOnAction(actionEvent -> {
+            subject.setItems(getOptions("subject", semester.getSelectionModel().getSelectedItem().toString()));
+            subject.getSelectionModel().selectFirst();
+            schoolClass.setItems(getOptions("classTeacher", semester.getSelectionModel().getSelectedItem().toString() + ";" + subject.getSelectionModel().getSelectedItem().toString()));
+            schoolClass.getSelectionModel().selectFirst();
+            showGradesForSemesterWithAddition(semester.getSelectionModel().getSelectedItem().toString(),subject.getSelectionModel().getSelectedItem().toString(),schoolClass.getSelectionModel().getSelectedItem().toString());
+        });
+
+        showGradesForSemesterWithAddition(semester.getSelectionModel().getSelectedItem().toString(), subject.getSelectionModel().getSelectedItem().toString(),schoolClass.getSelectionModel().getSelectedItem().toString());
     }
 
     @FXML
@@ -257,6 +301,7 @@ public class TeacherControls {
                         "JOIN przedmioty on kursy.id_przedmiotu = przedmioty.id_przedmiotu " +
                         "WHERE id_nauczyciela LIKE '" + User.getInstance().getLogin() + "' " +
                         "AND semestr LIKE '" + semester + "'" )));
+                break;
             case "subjectClass":
                 options.addAll(FXCollections.observableArrayList(queryOptions("SELECT DISTINCT nazwa FROM zajecia " +
                         "JOIN kursy on kursy.id_kursu = zajecia.id_kursu " +
@@ -292,6 +337,7 @@ public class TeacherControls {
             gradesGrid.setVgap(5);
             gradesGrid.setHgap(10);
             gradesPane.getChildren().add(gradesGrid);
+            gradesGrid.setAlignment(Pos.CENTER);
 
             int row = -1;
             int column = 1;
@@ -339,6 +385,103 @@ public class TeacherControls {
 
     }
 
+    private void showGradesForSemesterWithAddition(String semester,String subject,String schoolClass) {
+
+//        TODO: run query with grades for specific semester
+        gradesPane.getChildren().clear();
+        try {
+            System.out.println("|" + semester + "|" + User.getInstance().getLogin() + "|");
+            Statement statement = DatabaseConnection.connection.createStatement();
+            ResultSet result = statement.executeQuery("select oceny.id_ucznia,wartosc,waga,data,opis,imie,nazwisko,nazwa,k.id_kursu from oceny " +
+                    "join kursy k on oceny.id_kursu = k.id_kursu " +
+                    "join przedmioty p on k.id_przedmiotu = p.id_przedmiotu " +
+                    "join klasa_uczniowie ku on oceny.id_ucznia = ku.id_ucznia " +
+                    "join uczniowie u on ku.id_ucznia = u.pesel " +
+                    "where id_nauczyciela = '" + User.getInstance().getLogin() + "' " +
+                    "and id_klasy = '" + schoolClass + "' " +
+                    "and semestr = '" + semester + "' " +
+                    "and nazwa = '" + subject + "' order by ku.id_ucznia,oceny.data;");
+            if(!result.next())
+                return;
+            String current = "xdxdxd";
+            GridPane gradesGrid = new GridPane();
+//            gradesGrid.setPrefSize(990,665);
+            gradesGrid.setAlignment(Pos.CENTER);
+            gradesGrid.setVgap(5);
+            gradesGrid.setHgap(10);
+            gradesPane.getChildren().add(gradesGrid);
+
+            int row = -1;
+            int column = 1;
+            System.out.println("ELOO");
+            while (result.next())
+            {
+                if(!result.getString("id_ucznia").equals(current)) {
+                    current = result.getString("id_ucznia");
+                    row++;
+                    column = 1;
+                    Label label = new Label(result.getString("imie") + " " + result.getString("nazwisko"));
+                    label.setCursor(Cursor.HAND);
+                    final String id = result.getString("id_ucznia");
+                    final String imie = result.getString("imie");
+                    final String nazwisko = result.getString("nazwisko");
+                    final String przedmiot = result.getString("nazwa");
+                    final String pomSem = semester;
+                    final String courseId = result.getString("id_kursu");
+                    label.setOnMouseClicked(mouseEvent -> {
+                            openAddWindow(id,imie,nazwisko,przedmiot, pomSem, courseId);
+                    });
+                    label.setStyle("-fx-min-height: 20;-fx-min-width: 150;-fx-alignment: center;-fx-font-size: 15");
+                    gradesGrid.add(label, 0, row);
+                }
+                Label label = new Label(result.getString("wartosc"));
+                int waga = result.getInt("waga");
+                label.setStyle("-fx-font-size: 13;-fx-min-width: 25;-fx-alignment: center;-fx-background-color: rgba(" + (255-44*waga) +"," + 50+30*waga + "," + 140+10*waga + ",1)");
+                if(result.getString("opis").equals("ocena rocz") || result.getString("opis").equals("ocena sem")){
+                    label.setStyle("-fx-font-size: 13;-fx-min-width: 25;-fx-alignment: center;-fx-background-color: orange");
+                }
+                gradesGrid.add(label, column,row);
+                column++;
+
+                Label description = new Label("waga: " + result.getString("waga") + "\ndata: " + result.getString("data") +
+                        "\nopis: " + result.getString("opis"));
+                gradesPane.getChildren().add(description);
+                description.setVisible(false);
+                description.setStyle("-fx-font-size: 12;-fx-min-width:200;-fx-min-height: 100;-fx-alignment: center;-fx-background-color: rgba(14,255,7,0.95)");
+                label.setOnMouseEntered(mouseEvent -> {
+                    description.setLayoutX(mouseEvent.getSceneX()-290);
+                    description.setLayoutY(mouseEvent.getSceneY()-55);
+                    description.setVisible(true);
+                    description.toFront();
+                });
+                label.setOnMouseExited(mouseEvent -> {
+                    description.setVisible(false);
+                });
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Pokazuję oceny ucznia w semestrze " + semester);
+
+
+    }
+
+    private void openAddWindow(String id, String first, String last, String sub, String semester, String courseId){
+        Stage stage = new Stage();
+        stage.setTitle("Dodawanie oceny dla " + first + " " + last + " dla przedmiotu " + sub);
+        GridPane grid = new GridPane();
+        stage.setScene(new Scene(grid,500,600));
+        TextField val = new TextField();
+        TextField wag = new TextField();
+        TextField desc = new TextField();
+        grid.add(val,0,0);
+        grid.add(wag,0,2);
+        grid.add(desc,0,4);
+        stage.showAndWait();
+
+    }
+
     private void showYourClassGradesForSemester(String semester,String subject,String schoolClass) {
 
 //        TODO: run query with grades for specific semester
@@ -364,6 +507,7 @@ public class TeacherControls {
             gradesGrid.setVgap(5);
             gradesGrid.setHgap(10);
             gradesPane.getChildren().add(gradesGrid);
+            gradesGrid.setAlignment(Pos.CENTER);
 
             int row = -1;
             int column = 1;
