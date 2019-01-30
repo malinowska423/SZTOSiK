@@ -27,6 +27,7 @@
                 <Separator prefWidth="200.0" />
                 <Button mnemonicParsing="false" onAction="#showGrades" prefHeight="41.0" prefWidth="290.0" text="Oceny" />
                 <Button layoutX="10.0" layoutY="125.0" mnemonicParsing="false" onAction="#showSchedule" prefHeight="41.0" prefWidth="290.0" text="Plan zajęć" />
+            <Button layoutX="10.0" layoutY="158.0" mnemonicParsing="false" onAction="#showYoursClassGrades" prefHeight="41.0" prefWidth="290.0" text="Wychowawctwo" />
             <Button layoutX="10.0" layoutY="158.0" mnemonicParsing="false" onAction="#addGrade" prefHeight="41.0" prefWidth="290.0" text="Dodaj ocenę" />
             <Button layoutX="10.0" layoutY="199.0" mnemonicParsing="false" onAction="#editGrade" prefHeight="41.0" prefWidth="290.0" text="Edytuj ocenę" />
             </children></VBox>
