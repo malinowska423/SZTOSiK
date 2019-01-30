@@ -12,6 +12,7 @@ public class DatabaseConnection {
                         user,password);
     }
 
+
     public static String executeQuery(String query, int columns) throws SQLException{
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(query);
@@ -22,6 +23,7 @@ public class DatabaseConnection {
             }
             results.append(";");
         }
+//        System.out.println(results.toString());
         return results.toString();
     }
 

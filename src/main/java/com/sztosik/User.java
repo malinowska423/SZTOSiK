@@ -1,5 +1,7 @@
 package com.sztosik;
 
+import java.sql.SQLException;
+
 public class User {
     private static User instance;
     private String login;
@@ -25,6 +27,7 @@ public class User {
     public String getLogin() {
         return login;
     }
+
 
     public void setLogin(String login) {
         this.login = login;
