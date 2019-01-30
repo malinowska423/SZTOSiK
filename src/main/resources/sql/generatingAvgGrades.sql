@@ -44,7 +44,7 @@ BLOCK1 : BEGIN
             END IF;
             SET waga_oc = 0;
             IF semestr_ = 1 THEN
-              SET data_oceny = concat('20', rok+1, '-01-25');
+              SET data_oceny = concat('20', rok+1, '-01-30');
               SET wartosc_oc = (SELECT ocena_semestralna(sum(wartosc_oceny(wartosc)*waga)/sum(waga))
                                FROM oceny
                                WHERE id_ucznia = psl AND semestr LIKE concat(rok, '/', semestr_)
