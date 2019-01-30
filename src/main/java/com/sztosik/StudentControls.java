@@ -146,7 +146,7 @@ public class StudentControls {
     private void showGradesForSemester(String semester) {
 
 //        TODO: run query with grades for specific semester
-        grid.getChildren().clear();
+        gradesPane.getChildren().clear();
         try {
             System.out.println("|" + semester + "|" + User.getInstance().getLogin() + "|");
             Statement statement = DatabaseConnection.connection.createStatement();
@@ -182,6 +182,9 @@ public class StudentControls {
                 Label label = new Label(result.getString("wartosc"));
                 int waga = result.getInt("waga");
                 label.setStyle("-fx-font-size: 17;-fx-min-width: 25;-fx-alignment: center;-fx-background-color: rgba(" + 44*waga +"," + 50+30*waga + "," + 140+10*waga + ",1)");
+                if(result.getString("opis").equals("ocena rocz") || result.getString("opis").equals("ocena sem")){
+                    label.setStyle("-fx-font-size: 17;-fx-min-width: 25;-fx-alignment: center;-fx-background-color: orange");
+                }
                 gradesGrid.add(label, column,row);
                 column++;
 
@@ -190,9 +193,9 @@ public class StudentControls {
                         "\nopis: " + result.getString("opis"));
                 gradesPane.getChildren().add(description);
                 description.setVisible(false);
+                description.setStyle("-fx-font-size: 15;-fx-min-width:200;-fx-min-height: 100;-fx-alignment: center;-fx-background-color: rgba(14,255,7,0.95)");
                 label.setOnMouseEntered(mouseEvent -> {
                     System.out.println(mouseEvent.getScreenX());
-                    description.setStyle("-fx-background-color: rgba(14,255,7,0.95)");
                     description.setLayoutX(mouseEvent.getSceneX()-290);
                     description.setLayoutY(mouseEvent.getSceneY()-55);
                     description.setVisible(true);
@@ -202,7 +205,6 @@ public class StudentControls {
                     description.setVisible(false);
                 });
             }
-            gradesGrid.toFront();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -218,9 +220,10 @@ public class StudentControls {
         try {
             System.out.println("|" + semester + "|" + schoolClass + "|");
             Statement statement = DatabaseConnection.connection.createStatement();
-            ResultSet result = statement.executeQuery("select nr_lekcji, nazwa, id_sali,dzien_tygodnia from zajecia " +
+            ResultSet result = statement.executeQuery("select nr_lekcji, nazwa, id_sali,dzien_tygodnia,imie,nazwisko from zajecia " +
                     "join kursy k on zajecia.id_kursu = k.id_kursu " +
                     "join przedmioty p on k.id_przedmiotu = p.id_przedmiotu " +
+                    "join nauczyciele n on k.id_nauczyciela = n.pesel " +
                     "where id_klasy = '" + schoolClass + "'" +
                     "and semestr = '" + semester + "' order by dzien_tygodnia,nr_lekcji;");
             while (result.next()){
@@ -242,8 +245,8 @@ public class StudentControls {
                         idx = 5;
                         break;
                 }
-                Label label = new Label(result.getString("nazwa")+ "  " +result.getString("id_sali"));
-                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-alignment: center;-fx-background-color: rgba(199,199,200,0.5);-fx-font-size: 14");
+                Label label = new Label(result.getString("nazwa")+ "  " +result.getString("id_sali") + "\n" + result.getString("imie").charAt(0) + "" + result.getString("nazwisko").charAt(0));
+                label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-text-alignment: center;-fx-alignment: center;-fx-background-color: rgba(199,199,200,0.5);-fx-font-size: 14");
                 grid.add(label, idx,result.getInt("nr_lekcji")-1);
             }
             result = statement.executeQuery("select nr_lekcji,poczatek,koniec from dzwonki where nr_lekcji between 1 and 7");
@@ -314,7 +317,7 @@ public class StudentControls {
         try {
             System.out.println("|" + semester + "|" + classroom + "|");
             Statement statement = DatabaseConnection.connection.createStatement();
-            ResultSet result = statement.executeQuery("select nr_lekcji, nazwa,dzien_tygodnia,id_klasy from zajecia " +
+            ResultSet result = statement.executeQuery("select nr_lekcji, nazwa,dzien_tygodnia,id_klasy,imie,nazwisko from zajecia " +
                     "join kursy k on zajecia.id_kursu = k.id_kursu " +
                     "join przedmioty p on k.id_przedmiotu = p.id_przedmiotu " +
                     "join nauczyciele n on k.id_nauczyciela = n.pesel " +
@@ -339,7 +342,7 @@ public class StudentControls {
                         idx = 5;
                         break;
                 }
-                Label label = new Label(result.getString("nazwa") + "\nklasa " + result.getString("id_klasy"));
+                Label label = new Label(result.getString("nazwa") + "\n" + result.getString("imie").charAt(0) + "" + result.getString("nazwisko").charAt(0) +" klasa " + result.getString("id_klasy"));
                 label.setStyle("-fx-min-height: 85;-fx-min-width: 165;-fx-alignment: center;-fx-background-color: rgba(199,199,200,0.5);-fx-font-size: 14");
                 grid.add(label, idx,result.getInt("nr_lekcji")-1);
             }
