@@ -1590,12 +1590,12 @@ id_kursu</ColNames>
       <RefColNames>nr_lekcji</RefColNames>
     </foreign-key>
     <trigger id="366" parent="247" name="zajecia_insert">
-      <SourceTextLength>1142</SourceTextLength>
+      <SourceTextLength>1286</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
     <trigger id="367" parent="247" name="zajecia_update">
-      <SourceTextLength>1142</SourceTextLength>
+      <SourceTextLength>1196</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>

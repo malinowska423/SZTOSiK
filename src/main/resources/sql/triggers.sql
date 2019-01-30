@@ -428,10 +428,11 @@ CREATE TRIGGER zajecia_insert
       #       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ta klasa ma już ten przedmiot z innym nauczycielem';
       SET NEW.id_kursu = @kurs;
     END IF;
-    IF (SELECT count(id_zajec) FROM zajecia WHERE semestr = NEW.semestr
+    IF (SELECT count(id_zajec) FROM zajecia JOIN kursy k2 ON zajecia.id_kursu = k2.id_kursu
+                                WHERE semestr = NEW.semestr
                                 AND dzien_tygodnia = NEW.dzien_tygodnia
                                 AND nr_lekcji = NEW.nr_lekcji
-                                AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_kursu = NEW.id_kursu)) > 0 THEN
+                                AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_nauczyciela = (SELECT id_nauczyciela FROM kursy WHERE kursy.id_kursu = NEW.id_kursu))) > 0 THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zajęcia w tym czasie już istnieją';
     END IF;
   END;
@@ -450,10 +451,11 @@ CREATE TRIGGER zajecia_update
       #       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ta klasa ma już ten przedmiot z innym nauczycielem';
       SET NEW.id_kursu = @kurs;
     END IF;
-    IF (SELECT count(id_zajec) FROM zajecia WHERE semestr = NEW.semestr
-                                AND dzien_tygodnia = NEW.dzien_tygodnia
-                                AND nr_lekcji = NEW.nr_lekcji
-                                AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_kursu = NEW.id_kursu)) > 0 THEN
+    IF (SELECT count(id_zajec) FROM zajecia JOIN kursy k2 ON zajecia.id_kursu = k2.id_kursu
+        WHERE semestr = NEW.semestr
+          AND dzien_tygodnia = NEW.dzien_tygodnia
+          AND nr_lekcji = NEW.nr_lekcji
+          AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_nauczyciela = (SELECT id_nauczyciela FROM kursy WHERE kursy.id_kursu = NEW.id_kursu))) > 0 THEN
       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zajęcia w tym czasie już istnieją';
     END IF;
   END;
