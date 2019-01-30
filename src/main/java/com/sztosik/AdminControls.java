@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -443,8 +446,46 @@ public class AdminControls {
     }
 
     @FXML
+    AnchorPane createBackupPane;
+
+    @FXML
+    TextField backupPath;
+
+    @FXML
+    Label errorBackup;
+
+    @FXML
     void createBackup() {
         System.out.println("Tworzę kopię zapasową jako administrator");
+        setAllNotVisible();
+        createBackupPane.setVisible(true);
+    }
+
+    @FXML
+    void createBackupFile() {
+        errorBackup.setVisible(false);
+        if (!backupPath.getText().isEmpty()) {
+
+            System.out.println("Tworzę plik kopii zapasowej");
+//            try {
+//                Runtime rt = Runtime.getRuntime();
+//                Process p = rt.exec("mysqldump -utodo_user -ptoto_passowrd --database mydb_name");
+//                InputStream is=p.getInputStream();
+//                FileOutputStream fos = new FileOutputStream("mydb_abackup.sql");
+//                int ch;
+//                while((ch=is.read())!=-1) {
+//                    fos.write(ch);
+//                }
+//                fos.close();
+//                is.close();
+//                System.out.println("----SQL backup file generated: mydb_abackup.sql----");
+//            } catch (IOException e) {
+//                errorBackup.setVisible(true);
+//            }
+
+        } else {
+            errorBackup.setVisible(true);
+        }
     }
 
     @FXML
@@ -459,6 +500,7 @@ public class AdminControls {
         addPane.setVisible(false);
         formAddPane.setVisible(false);
         addList.setVisible(false);
+        createBackupPane.setVisible(false);
     }
 
     private void setAllFormsNotVisible() {
