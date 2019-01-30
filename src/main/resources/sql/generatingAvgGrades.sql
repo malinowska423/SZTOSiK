@@ -54,7 +54,7 @@ BLOCK1 : BEGIN
               SET data_oceny = concat('20',rok,'-06-30');
               SET wartosc_oc = (SELECT ocena_roczna(sum(wartosc_oceny(wartosc)*waga)/sum(waga))
                                 FROM oceny
-                                WHERE id_ucznia = psl AND semestr LIKE concat(rok, '/', semestr_)
+                                WHERE id_ucznia = psl AND (semestr LIKE concat(rok, '/', semestr_) OR semestr LIKE concat(rok-1, '/1'))
                                   AND typ LIKE 'cząstkowa' AND id_kursu = kurs GROUP BY id_kursu);
               SET typ_oc = 'rocz';
             END IF;

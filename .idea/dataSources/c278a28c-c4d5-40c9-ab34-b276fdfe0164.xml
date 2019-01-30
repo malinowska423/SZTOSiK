@@ -982,7 +982,7 @@
       <RoutineKind>procedure</RoutineKind>
     </routine>
     <routine id="253" parent="2" name="generuj_oceny_semestralne">
-      <SourceTextLength>2774</SourceTextLength>
+      <SourceTextLength>2812</SourceTextLength>
       <RoutineKind>procedure</RoutineKind>
     </routine>
     <routine id="254" parent="2" name="generuj_plan">
@@ -1590,7 +1590,7 @@ id_kursu</ColNames>
       <RefColNames>nr_lekcji</RefColNames>
     </foreign-key>
     <trigger id="366" parent="247" name="zajecia_insert">
-      <SourceTextLength>1136</SourceTextLength>
+      <SourceTextLength>1142</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>

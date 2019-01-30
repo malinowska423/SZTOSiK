@@ -420,19 +420,19 @@ CREATE TRIGGER zajecia_insert
   BEFORE INSERT ON zajecia
   FOR EACH ROW
   BEGIN
-    IF (SELECT count(id_zajec) FROM zajecia WHERE semestr = NEW.semestr
-                                AND dzien_tygodnia = NEW.dzien_tygodnia
-                                AND nr_lekcji = NEW.nr_lekcji
-                                AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_kursu = NEW.id_kursu)) > 0 THEN
-      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zajęcia w tym czasie już istnieją';
-    END IF;
     SET @kurs = NULL;
     SET @kurs = (SELECT DISTINCT zajecia.id_kursu FROM zajecia JOIN kursy k ON zajecia.id_kursu = k.id_kursu
                                                                JOIN przedmioty p ON k.id_przedmiotu = p.id_przedmiotu
                  WHERE semestr = NEW.semestr AND id_klasy = NEW.id_klasy AND nazwa = (SELECT nazwa FROM kursy JOIN przedmioty on kursy.id_przedmiotu = przedmioty.id_przedmiotu WHERE id_kursu = NEW.id_kursu));
     IF @kurs IS NOT NULL AND NEW.id_kursu <> @kurs THEN
-#       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ta klasa ma już ten przedmiot z innym nauczycielem';
+      #       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ta klasa ma już ten przedmiot z innym nauczycielem';
       SET NEW.id_kursu = @kurs;
+    END IF;
+    IF (SELECT count(id_zajec) FROM zajecia WHERE semestr = NEW.semestr
+                                AND dzien_tygodnia = NEW.dzien_tygodnia
+                                AND nr_lekcji = NEW.nr_lekcji
+                                AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_kursu = NEW.id_kursu)) > 0 THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zajęcia w tym czasie już istnieją';
     END IF;
   END;
 
@@ -442,12 +442,6 @@ CREATE TRIGGER zajecia_update
   BEFORE UPDATE ON zajecia
   FOR EACH ROW
   BEGIN
-    IF (SELECT count(id_zajec) FROM zajecia WHERE semestr = NEW.semestr
-                                AND dzien_tygodnia = NEW.dzien_tygodnia
-                                AND nr_lekcji = NEW.nr_lekcji
-                                AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_kursu = NEW.id_kursu)) > 0 THEN
-      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zajęcia w tym czasie już istnieją';
-    END IF;
     SET @kurs = NULL;
     SET @kurs = (SELECT DISTINCT zajecia.id_kursu FROM zajecia JOIN kursy k ON zajecia.id_kursu = k.id_kursu
                                                                JOIN przedmioty p ON k.id_przedmiotu = p.id_przedmiotu
@@ -455,6 +449,12 @@ CREATE TRIGGER zajecia_update
     IF @kurs IS NOT NULL AND NEW.id_kursu <> @kurs THEN
       #       SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Ta klasa ma już ten przedmiot z innym nauczycielem';
       SET NEW.id_kursu = @kurs;
+    END IF;
+    IF (SELECT count(id_zajec) FROM zajecia WHERE semestr = NEW.semestr
+                                AND dzien_tygodnia = NEW.dzien_tygodnia
+                                AND nr_lekcji = NEW.nr_lekcji
+                                AND (id_klasy = NEW.id_klasy OR id_sali = NEW.id_sali OR id_kursu = NEW.id_kursu)) > 0 THEN
+      SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO=30001, MESSAGE_TEXT='Zajęcia w tym czasie już istnieją';
     END IF;
   END;
 
