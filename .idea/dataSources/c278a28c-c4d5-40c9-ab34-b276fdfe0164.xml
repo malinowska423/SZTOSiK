@@ -978,7 +978,7 @@
       <RoutineKind>procedure</RoutineKind>
     </routine>
     <routine id="252" parent="2" name="generuj_oceny_na_semestr">
-      <SourceTextLength>2953</SourceTextLength>
+      <SourceTextLength>2740</SourceTextLength>
       <RoutineKind>procedure</RoutineKind>
     </routine>
     <routine id="253" parent="2" name="generuj_oceny_semestralne">
@@ -990,7 +990,7 @@
       <RoutineKind>procedure</RoutineKind>
     </routine>
     <routine id="255" parent="2" name="generuj_uczniow">
-      <SourceTextLength>3971</SourceTextLength>
+      <SourceTextLength>3833</SourceTextLength>
       <RoutineKind>procedure</RoutineKind>
     </routine>
     <routine id="256" parent="2" name="losowa_data_miedzy">
@@ -1104,7 +1104,7 @@ id_ucznia</ColNames>
       <Events>U</Events>
     </trigger>
     <trigger id="278" parent="239" name="ku_delete">
-      <SourceTextLength>359</SourceTextLength>
+      <SourceTextLength>193</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
@@ -1167,7 +1167,7 @@ id_ucznia</ColNames>
       <Events>U</Events>
     </trigger>
     <trigger id="290" parent="240" name="klasy_delete">
-      <SourceTextLength>197</SourceTextLength>
+      <SourceTextLength>133</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
@@ -1267,17 +1267,17 @@ id_ucznia</ColNames>
       <Primary>1</Primary>
     </key>
     <trigger id="308" parent="242" name="nauczyciele_insert">
-      <SourceTextLength>1540</SourceTextLength>
+      <SourceTextLength>1436</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
     <trigger id="309" parent="242" name="nauczyciele_update">
-      <SourceTextLength>1367</SourceTextLength>
+      <SourceTextLength>1263</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
     <trigger id="310" parent="242" name="nauczyciele_before_delete">
-      <SourceTextLength>381</SourceTextLength>
+      <SourceTextLength>278</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
@@ -1482,17 +1482,17 @@ nazwisko</ColNames>
       <Primary>1</Primary>
     </key>
     <trigger id="346" parent="246" name="uczniowie_insert">
-      <SourceTextLength>1599</SourceTextLength>
+      <SourceTextLength>1495</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
     <trigger id="347" parent="246" name="uczniowie_update">
-      <SourceTextLength>1623</SourceTextLength>
+      <SourceTextLength>1519</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
     <trigger id="348" parent="246" name="uczniowie_delete">
-      <SourceTextLength>361</SourceTextLength>
+      <SourceTextLength>219</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>D</Events>
     </trigger>
@@ -1590,12 +1590,12 @@ id_kursu</ColNames>
       <RefColNames>nr_lekcji</RefColNames>
     </foreign-key>
     <trigger id="366" parent="247" name="zajecia_insert">
-      <SourceTextLength>1286</SourceTextLength>
+      <SourceTextLength>1165</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
     <trigger id="367" parent="247" name="zajecia_update">
-      <SourceTextLength>1196</SourceTextLength>
+      <SourceTextLength>1075</SourceTextLength>
       <Turn>before-row</Turn>
       <Events>U</Events>
     </trigger>
